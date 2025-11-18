@@ -36,5 +36,6 @@ export const schema = `#graphql
 
     type Mutation {
         newUser(name:String!, age:Int!, gender:String!, occ:String!, email: String!): String,
+        updateUser(id:ID!, name:String!): String
     }
 `

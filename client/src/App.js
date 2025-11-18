@@ -2,8 +2,19 @@ import { useLazyQuery, useMutation, useQuery } from "@apollo/client/react";
 import { USER, USERS } from "./graphql/query.js";
 import { NEWUSER } from "./graphql/mutation.js";
 
+// authorized query access
 function GetIndividualUser() {
-  const { loading, error, data } = useQuery(USER, { variables: { id: "691b735d87751daf641ebb**" } });
+  const variables = { id: "691b735d87751daf641e****" }
+  const auth = { token: "123456" }
+  const { loading, error, data } = useQuery(USER,
+    {
+      variables: variables,
+      context: {
+        headers: auth
+      }
+    }
+  )
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error.message}</p>;
   console.log(data.user)
@@ -14,8 +25,8 @@ function GetIndividualUser() {
   );
 }
 
+// data disclosing after trigger
 function GetOccs() {
-  // data disclosing after trigger
   const [loadOccs, { called, loading, data }] = useLazyQuery(USERS);
   if (called && loading) return <p>Loading ...</p>;
   console.log(data)
@@ -41,9 +52,10 @@ function GetOccs() {
   )
 }
 
-function AddUser () {
+// mutation
+function AddUser() {
   const [newUser, { data }] = useMutation(NEWUSER)
-  const variables = {  
+  const variables = {
     "name": "Annesha Naha",
     "age": 85,
     "gender": "Female",
@@ -53,7 +65,7 @@ function AddUser () {
 
   return (
     <div>
-      <button onClick={() => newUser({variables: variables})}>Create User</button>
+      <button onClick={() => newUser({ variables: variables })}>Create User</button>
       {
         data && (<h1>{data?.newUser}</h1>)
       }

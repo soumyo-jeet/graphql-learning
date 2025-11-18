@@ -8,6 +8,23 @@ export const resolvers = {
             const user = await User.create(args)
             console.log(user)
             return "User is created!"
+        },
+
+        updateUser: async (_, args, context) => {
+            if(context.token !== "123456") return "Chutiyaaa"
+            console.log(args)
+            const user = await User.findById(args.id)
+            console.log(user)
+            if(user)
+            {
+                console.log(user)
+                user.name = args.name
+                await user.save()
+                console.log(user)
+                return "User Updated!"
+            }
+
+            return "User not found"
         }
     },
 
@@ -24,7 +41,9 @@ export const resolvers = {
         },
 
         // user by id
-        user: async (parent, arg) => {
+        user: async (parent, arg, context) => {
+            console.log(context)
+            if(context.token != "123456") return null
             const user = await User.findById(arg.id)
             console.log(arg.id)
             return user

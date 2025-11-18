@@ -23,13 +23,17 @@ const server = new ApolloServer({
 startStandaloneServer(server, {
     listen:{
         port: PORT,
+    },
+    context: async ({req}) => {
+        const token = await req?.headers?.token
+        return {token: token}
     }
 })
 .then(() => console.log(`Server is running on http://localhost:${PORT}`))
 .catch((e) => "Server is not listening...")
 
 
-// Bind the server to a port with express
+// Bind the server to a port with express (NOT AVAILABLE IN NEW VERSION OF APOLLO SERVER)
 app.get("/", (req, res) => res.send("Hello World"))
 // app.use("/graphql", expressMiddleware(server))
 app.listen(5001, ()=> console.log(`"Express is running on http://localhost:5001"`))
